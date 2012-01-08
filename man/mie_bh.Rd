@@ -1,0 +1,54 @@
+\name{mie_bh}
+\alias{mie_bh}
+\title{mie_bh}
+\usage{
+  mie_bh(wavelength, epsilon.core,
+    epsilon.coating = medium^2, radius, thickness = 0,
+    medium = 1,
+    nmax = ceiling(2 + max(y) + 4 * max(y)^(1/3)),
+    efficiency = TRUE)
+}
+\arguments{
+  \item{wavelength}{real vector}
+
+  \item{epsilon.core}{complex vector}
+
+  \item{epsilon.coating}{complex vector}
+
+  \item{radius}{scalar}
+
+  \item{thickness}{scalar}
+
+  \item{medium}{scalar, refractive index of surrounding
+  medium}
+
+  \item{nmax}{truncation order}
+
+  \item{efficiency}{logical, scale by geometrical
+  cross-sections}
+}
+\value{
+  data.frame
+}
+\description{
+  ##' Far-field cross-sections
+}
+\details{
+  Coated sphere illuminated by a plane wave
+}
+\examples{
+gold <- epsAu(seq(400, 800))
+coated <- with(gold, mie_bh(wavelength, epsilon, radius=0.05, medium=1.33, efficiency=FALSE))
+bare <- with(gold, mie(wavelength, epsilon, radius=0.05, medium=1.33, efficiency=FALSE))
+matplot(coated$wavelength, coated[, -1], type="l", lty=1,
+        xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
+matlines(bare$wavelength, bare[, -1], type="l", lty=2)
+legend("topright", c(names(coated)[-1], "bare"), col=1:3, lty=c(1,1,1,2))
+}
+\author{
+  Baptiste Auguie
+}
+\seealso{
+  Other user: \code{\link{mie}}, \code{\link{mie-package}}
+}
+

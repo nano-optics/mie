@@ -1,0 +1,15 @@
+Package: mie
+Type: Package
+Title: Mie scattering
+Version: 0.1
+Date: 2012-01-06
+Author: Baptiste Auguie
+Maintainer: baptiste <baptiste.auguie@gmail.com>
+Description: Mie scattering.
+Depends: R (>= 2.4.0)
+Imports: Bessel
+Suggests: dielectric
+License: GPL (>=2)
+LazyLoad: yes
+Collate: 'epsilon.r' 'mie-package.r' 'mie.r' 'wrap.r'
+Packaged: 2012-01-06 04:05:29 UTC; auguieba
