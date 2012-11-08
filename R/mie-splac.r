@@ -59,7 +59,7 @@ susceptibility <- function(nmax, s, x){
   
   RBx <- c(psi(x, nmax), xi(x, nmax))
   RBz <- psi(z, nmax)
-  
+      
   smat <- matrix(s, ncol=nmax, nrow=length(x), byrow=FALSE)
 
   PP1 <- RBz$psi * RBx$psip
@@ -86,24 +86,43 @@ list(G = G_numerator / A_denominator,
 ##' @title efficiencies
 ##' @param x real vector, size parameter
 ##' @param GD list with Gamma, Delta, A, B
+##' @param mode type of mode
+##' @param order order of multipoles
 ##' @return matrix of Qext, Qsca, Qabs
 ##' @author Baptiste Auguie
 ##' @export
-efficiencies <- function(x, GD){
+efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NULL){
 
-  nmax <- ncol(GD$G)
+  mode <- match.arg(mode)
+  
+  nmax <- NCOL(GD$G)
   nvec <- seq.int(nmax)
   nvec2 <- 2 * nvec + 1
+  if(all(is.numeric(order)) && all(is.finite(order))) {
+    nvec2[-order] <- 0
+  }
   
   G2 <- Mod(GD$G)^2
   D2 <- Mod(GD$D)^2
-  scatmat <- G2 + D2
-
+  
   GR <- Re(GD$G)
   DR <- Re(GD$D)
+  
+  if(mode == "EM"){
+    scatmat <- G2 + D2
+    ext_coeff <- GR + DR
+  } else {
+    if(mode == "Electric"){
+        scatmat <- D2
+        ext_coeff <- DR
+      } else {
+        scatmat <- G2 
+        ext_coeff <- GR
+      }
+  }
 
   Qsca <- 2 / x^2 * scatmat %*% nvec2
-  Qext <- - 2 / x^2 *  (GR + DR) %*% nvec2
+  Qext <- - 2 / x^2 * ext_coeff %*% nvec2
   Qabs <- Qext - Qsca
 
   cbind(Qext = Qext, Qsca = Qsca, Qabs = Qabs)
@@ -119,6 +138,8 @@ efficiencies <- function(x, GD){
 ##' @param medium scalar, refractive index of surrounding medium
 ##' @param nmax truncation order
 ##' @param efficiency logical, scale by geometrical cross-sections
+##' @param mode type of mode
+##' @param order order of multipoles
 ##' @return data.frame
 ##' @author Baptiste Auguie
 ##' @family user
@@ -129,18 +150,44 @@ efficiencies <- function(x, GD){
 ##' matplot(cross_sections$wavelength, cross_sections[, -1], type="l", lty=1,
 ##'         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
 ##' legend("topright", names(cross_sections)[-1], col=1:3, lty=1)
+##'
+##'gold <- epsAu(seq(200, 1500))
+##'library(ggplot2)
+##'
+##'params <- expand.grid(order = c(1, 2, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
+##'
+##'all <- mdply(params, mie, wavelength=gold$wavelength, epsilon=gold$epsilon, radius=0.08, medium=1.5,
+##'             .progress="text")
+##'
+##'m <- melt(all, meas = c("extinction", "scattering", "absorption"))
+##'
+##'ggplot(m) +
+##'  facet_grid(mode~variable, scales="free") +
+##'  geom_path(aes(wavelength, value, colour = mode, linetype = factor(order),
+##'                group=interaction(mode, order, variable))) +
+##'  cda::theme_minimal() +
+##'  scale_linetype_manual(values = c(2, 3, 1)) +
+##'  labs(x = expression(wavelength / mu*m),
+##'       y = expression(sigma / mu*m^2),
+##'       colour = "Mode",
+##'       linetype = "Order")
+##' 
 mie <- function(wavelength, epsilon, radius, medium = 1.0,
                 nmax=ceiling(2 + max(x) + 4 * max(x)^(1/3)),
-                efficiency = TRUE){
+                efficiency = FALSE, mode=c("EM", "Magnetic", "Electric"),
+                order = Inf){
 
+  mode <- match.arg(mode)
+  
   s <- sqrt(epsilon) / medium
   x <- 2 * pi / wavelength * medium * radius
   
   ## lazy evaluation rules.. default nmax evaluated now
   coeffs <- susceptibility(nmax, s, x)
-  Q <- efficiencies(x, coeffs)
+  Q <- efficiencies(x, coeffs, mode=mode, order=order)
   if(!efficiency) Q <- Q * (pi*radius^2)
   results <- data.frame(wavelength, Q)
   names(results) <- c("wavelength", "extinction", "scattering", "absorption")
   invisible(results)
 }
+

@@ -2,12 +2,17 @@
 \alias{efficiencies}
 \title{efficiencies}
 \usage{
-  efficiencies(x, GD)
+  efficiencies(x, GD,
+    mode = c("EM", "Magnetic", "Electric"), order = NULL)
 }
 \arguments{
   \item{x}{real vector, size parameter}
 
   \item{GD}{list with Gamma, Delta, A, B}
+
+  \item{mode}{type of mode}
+
+  \item{order}{order of multipoles}
 }
 \value{
   matrix of Qext, Qsca, Qabs

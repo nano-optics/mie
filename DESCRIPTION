@@ -6,10 +6,19 @@ Date: 2012-01-06
 Author: Baptiste Auguie
 Maintainer: baptiste <baptiste.auguie@gmail.com>
 Description: Mie scattering.
-Depends: R (>= 2.4.0)
-Imports: Bessel
-Suggests: dielectric
+Depends:
+    R (>= 2.4.0)
+Imports:
+    Bessel
+Suggests:
+    dielectric
 License: GPL (>=2)
 LazyLoad: yes
-Collate: 'epsilon.r' 'mie-package.r' 'mie.r' 'wrap.r' 'zzz.r'
-Packaged: 2012-01-06 04:05:29 UTC; auguieba
+Collate:
+    'epsilon.r'
+    'mie-bohren.r'
+    'mie-matlab.R'
+    'mie-package.r'
+    'mie-splac.r'
+    'sphericalHarmonics.r'
+    'zzz.r'
