@@ -1,5 +1,7 @@
 library(mie)
-
+library(plyr)
+library(reshape2)
+library(grid)
 library(ggplot2)
 gold <- epsAu(seq(400, 900))
 silver <- epsAg(seq(300, 800))
