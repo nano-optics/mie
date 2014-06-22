@@ -3,7 +3,6 @@
 ##' Scattering of light by a spherical object
 ##' 
 ##' @name mie-package
-##' @aliases mie
 ##' @docType package
 ##' @import Bessel
 ##' @useDynLib mie
@@ -13,5 +12,4 @@
 ##' L. Novotny, E. Hecht, Principles of Nano-optics Cambridge University Press, 2006 
 ##' @keywords packagelibrary
 ##' @family user
-function()
-  NULL
+NULL

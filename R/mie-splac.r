@@ -146,7 +146,7 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##' @export
 ##' @examples 
 ##' gold <- epsAu(seq(400, 800))
-##' cross_sections <- with(gold, mie(wavelength, epsilon, radius=0.05, medium=1.33, efficiency=FALSE))
+##' cross_sections <- with(gold, mie(wavelength, epsilon, radius=50, medium=1.33, efficiency=FALSE))
 ##' matplot(cross_sections$wavelength, cross_sections[, -1], type="l", lty=1,
 ##'         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
 ##' legend("topright", names(cross_sections)[-1], col=1:3, lty=1)
@@ -156,19 +156,18 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##'
 ##'params <- expand.grid(order = c(1, 2, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
 ##'
-##'all <- mdply(params, mie, wavelength=gold$wavelength, epsilon=gold$epsilon, radius=0.08, medium=1.5,
+##'all <- plyr::mdply(params, mie, wavelength=gold$wavelength, 
+##'              epsilon=gold$epsilon, radius=80, medium=1.5,
 ##'             .progress="text")
 ##'
-##'m <- melt(all, meas = c("extinction", "scattering", "absorption"))
+##'m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
 ##'
 ##'ggplot(m) +
 ##'  facet_grid(mode~variable, scales="free") +
-##'  geom_path(aes(wavelength, value, colour = mode, linetype = factor(order),
-##'                group=interaction(mode, order, variable))) +
-##'  cda::theme_minimal() +
+##'  geom_path(aes(wavelength, value, colour = factor(order))) +
 ##'  scale_linetype_manual(values = c(2, 3, 1)) +
-##'  labs(x = expression(wavelength / mu*m),
-##'       y = expression(sigma / mu*m^2),
+##'  labs(x = expression(wavelength / nm),
+##'       y = expression(sigma / nm^2),
 ##'       colour = "Mode",
 ##'       linetype = "Order")
 ##' 

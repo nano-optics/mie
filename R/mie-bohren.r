@@ -14,7 +14,7 @@ bhcoat <- function(x, y, rrcore, rrshell){
 }
 
 
-##' ##' Far-field cross-sections
+##' Far-field cross-sections
 ##'
 ##' Coated sphere illuminated by a plane wave
 ##' @title mie_bh
@@ -30,12 +30,14 @@ bhcoat <- function(x, y, rrcore, rrshell){
 ##' @author Baptiste Auguie
 ##' @family user
 ##' @export
-##' @examples 
+##' @examples
 ##' gold <- epsAu(seq(400, 800))
-##' coated <- with(gold, mie_bh(wavelength, epsilon, radius=0.05, medium=1.33, efficiency=FALSE))
-##' bare <- with(gold, mie(wavelength, epsilon, radius=0.05, medium=1.33, efficiency=FALSE))
+##' coated <- with(gold, mie_bh(wavelength, epsilon, radius=50, medium=1.33, 
+##' efficiency=FALSE))
+##' bare <- with(gold, mie(wavelength, epsilon, radius=50, medium=1.33, 
+##' efficiency=FALSE))
 ##' matplot(coated$wavelength, coated[, -1], type="l", lty=1,
-##'         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
+##'         xlab=expression(lambda/nm), ylab=expression(sigma/nm^2))
 ##' matlines(bare$wavelength, bare[, -1], type="l", lty=2)
 ##' legend("topright", c(names(coated)[-1], "bare"), col=1:3, lty=c(1,1,1,2))
 mie_bh <- function(wavelength, epsilon.core, epsilon.coating = medium^2,
