@@ -10,6 +10,7 @@ License: GPL-3
 Description: Numerical implementation of Mie scattering theory for light
     scattering by spherical particles.
 URL: https://github.com/baptiste/mie
+DOI: http://dx.doi.org/10.5281/zenodo.11421
 VignetteBuilder: knitr
 Depends:
     dielectric
