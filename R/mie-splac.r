@@ -80,6 +80,7 @@ susceptibility <- function(s, x, nmax){
   z <- s*x
   rbz <- ricatti_bessel(z, nmax)
   rbx <- ricatti_bessel(x, nmax)
+  
   PP1 <- rbz[["psi"]] * rbx[["dpsi"]];
   PP2 <- rbx[["psi"]] * rbz[["dpsi"]];
   PP3 <- rbz[["psi"]] * rbx[["dxi"]];
@@ -95,6 +96,30 @@ susceptibility <- function(s, x, nmax){
        A = 1i * smat   / A_denominator,
        B = 1i * smat   / B_denominator)
 }
+
+average_Mloc <- function(wavelength, epsilon, radius, medium = 1.0, nmax=10){
+  
+  s <- sqrt(epsilon) / medium
+  x <- 2 * pi / wavelength * medium * radius
+    
+  rbx <- ricatti_bessel(x, nmax)
+  GD <- susceptibility(s, x, nmax)
+  
+  tmp1 <- rbx[["psi"]] + GD[["G"]] * rbx[["xi"]]
+  tmp2 <- rbx[["dpsi"]] + GD[["D"]] * rbx[["dxi"]]
+  summat1 <- abs(tmp1)^2 + abs(tmp2)^2
+  
+  nlen <- seq_len(nmax)
+  cc1 <- t(2*nlen + 1)
+  cc2 <- cc1*nlen*(nlen+1)
+  
+  tmp1 <- rbx[["psi"]] + GD[["D"]] * rbx[["xi"]] 
+  summat2 <- abs(tmp1)^2
+#   browser()
+  # From Eq. H.79
+ data.frame(wavelength=wavelength, Mloc = 1/(2*x^2) * tcrossprod(summat1, cc1) + 1/(2*x^4) * tcrossprod(summat2, cc2))
+}
+
 
 ##' Efficiencies
 ##'
@@ -112,7 +137,7 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
   mode <- match.arg(mode)
   
   nmax <- NCOL(GD$G)
-  nvec <- seq.int(nmax)
+  nvec <- seq_len(nmax)
   nvec2 <- 2 * nvec + 1
   if(all(is.numeric(order)) && all(is.finite(order))) {
     nvec2[-order] <- 0
