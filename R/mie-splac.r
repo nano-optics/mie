@@ -43,6 +43,27 @@ xi <- function(rho, nmax){
 
   
 }
+
+
+ricatti_bessel <- function(rho, nmax){
+  
+  rho <- as.complex(rho)
+  sq <- sqrt((pi/2)*rho)
+  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = nmax+1)
+  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = nmax+1, m = 1)
+  
+  psi <- bj[, -1L]
+  xi <- bh[, -1L]
+  norho <- outer(1/rho, seq_len(nmax))
+  
+  dpsi <- bj[, -(nmax+1)] - norho * psi
+  dxi <- bh[, -(nmax+1)] - norho * xi
+  
+  list(psi=psi, xi=xi, dpsi=dpsi, dxi=dxi)
+}
+
+
+
 ##' Generalised susceptibility for the Mie theory
 ##'
 ##' Corresponds to the usual coefficients a_n, b_n, c_n, d_n
@@ -53,31 +74,26 @@ xi <- function(rho, nmax){
 ##' @return list with Gamma, Delta, A, B
 ##' @author Baptiste Auguie
 ##' @export
-susceptibility <- function(nmax, s, x){
-
-  z <- s * x
+susceptibility <- function(s, x, nmax){
   
-  RBx <- c(psi(x, nmax), xi(x, nmax))
-  RBz <- psi(z, nmax)
-      
   smat <- matrix(s, ncol=nmax, nrow=length(x), byrow=FALSE)
-
-  PP1 <- RBz$psi * RBx$psip
-  PP2 <- RBx$psi * RBz$psip
-  PP3 <- RBz$psi * RBx$xip
-  PP4 <- RBx$xi  * RBz$psip
-    
+  z <- s*x
+  rbz <- ricatti_bessel(z, nmax)
+  rbx <- ricatti_bessel(x, nmax)
+  PP1 <- rbz[["psi"]] * rbx[["dpsi"]];
+  PP2 <- rbx[["psi"]] * rbz[["dpsi"]];
+  PP3 <- rbz[["psi"]] * rbx[["dxi"]];
+  PP4 <- rbx[["xi"]] * rbz[["dpsi"]];
+  
   G_numerator   <-  - PP1 + smat * PP2
   D_numerator   <-    PP2 - smat * PP1
   B_denominator <-  - PP4 + smat * PP3
   A_denominator <-    PP3 - smat * PP4
-
-
-list(G = G_numerator / A_denominator,
-     D = D_numerator / B_denominator,
-     A = 1i * smat   / A_denominator,
-     B = 1i * smat   / B_denominator)
-     
+  
+  list(G = G_numerator / A_denominator,
+       D = D_numerator / B_denominator,
+       A = 1i * smat   / A_denominator,
+       B = 1i * smat   / B_denominator)
 }
 
 ##' Efficiencies
@@ -182,7 +198,7 @@ mie <- function(wavelength, epsilon, radius, medium = 1.0,
   x <- 2 * pi / wavelength * medium * radius
   
   ## lazy evaluation rules.. default nmax evaluated now
-  coeffs <- susceptibility(nmax, s, x)
+  coeffs <- susceptibility(s, x, nmax)
   Q <- efficiencies(x, coeffs, mode=mode, order=order)
   if(!efficiency) Q <- Q * (pi*radius^2)
   results <- data.frame(wavelength, Q)
