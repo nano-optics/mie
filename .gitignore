@@ -6,3 +6,4 @@ src/bhcoat.o
 src/mie.so
 
 *.so
+.Rproj.user

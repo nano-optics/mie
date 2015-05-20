@@ -97,6 +97,18 @@ susceptibility <- function(s, x, nmax){
        B = 1i * smat   / B_denominator)
 }
 
+##' Average Mloc
+##'
+##' Enhancement factor averaged over the surface 
+##' @title average_Mloc
+##' @param wavelength real vector
+##' @param epsilon complex vector
+##' @param radius scalar
+##' @param medium scalar, refractive index of surrounding medium
+##' @param nmax truncation order
+##' @return data.frame with wavelength and Mloc
+##' @author Baptiste Auguie
+##' @export
 average_Mloc <- function(wavelength, epsilon, radius, medium = 1.0, nmax=10){
   
   s <- sqrt(epsilon) / medium
@@ -115,7 +127,7 @@ average_Mloc <- function(wavelength, epsilon, radius, medium = 1.0, nmax=10){
   
   tmp1 <- rbx[["psi"]] + GD[["D"]] * rbx[["xi"]] 
   summat2 <- abs(tmp1)^2
-#   browser()
+  
   # From Eq. H.79
  data.frame(wavelength=wavelength, Mloc = 1/(2*x^2) * tcrossprod(summat1, cc1) + 1/(2*x^4) * tcrossprod(summat2, cc2))
 }
