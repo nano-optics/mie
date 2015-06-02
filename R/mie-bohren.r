@@ -1,11 +1,12 @@
 ## internal wrapper
-bhcoat <- function(x, y, rrcore, rrshell){
+bhcoat <- function(x, y, rrcore, rrshell, lmax=10){
 
   call <- .Fortran("bhcoat", 
                    as.double(x),
                    as.double(y),
                    as.complex(rrcore),
                    as.complex(rrshell),
+                   as.integer(lmax),
                    qext=double(1),
                    qsca=double(1),
                    qback=double(1))
@@ -24,7 +25,7 @@ bhcoat <- function(x, y, rrcore, rrshell){
 ##' @param radius scalar
 ##' @param thickness scalar
 ##' @param medium scalar, refractive index of surrounding medium
-##' @param nmax truncation order
+##' @param lmax truncation order
 ##' @param efficiency logical, scale by geometrical cross-sections
 ##' @return data.frame
 ##' @author Baptiste Auguie
@@ -42,7 +43,7 @@ bhcoat <- function(x, y, rrcore, rrshell){
 ##' legend("topright", c(names(coated)[-1], "bare"), col=1:3, lty=c(1,1,1,2))
 mie_bh <- function(wavelength, epsilon.core, epsilon.coating = medium^2,
                    radius, thickness = 0, medium = 1,
-                   nmax=ceiling(2 + max(y) + 4 * max(y)^(1/3)),
+                   lmax=ceiling(2 + max(y) + 4 * max(y)^(1/3)),
                    efficiency = TRUE){
 
   k0 <- 2*pi / wavelength
@@ -54,7 +55,7 @@ mie_bh <- function(wavelength, epsilon.core, epsilon.coating = medium^2,
   rrshell <- sqrt(epsilon.coating)/medium
   
   tmp <- do.call(rbind, mapply(bhcoat, x=x, y=y,
-                               rrcore=rrcore, rrshell=rrshell, SIMPLIFY=FALSE))
+                               rrcore=rrcore, rrshell=rrshell, lmax=lmax, SIMPLIFY=FALSE))
   if(!efficiency) tmp <- tmp * (pi*(radius+thickness)^2)
   res <- data.frame(cbind(wavelength, tmp))
   names(res) <- c("wavelength", "extinction", "scattering", "absorption")

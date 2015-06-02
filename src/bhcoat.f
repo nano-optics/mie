@@ -1,12 +1,13 @@
-      SUBROUTINE BHCOAT(XX,YY,RRFRL1,RRFRL2,QQEXT,QQSCA,QBACK)
+      SUBROUTINE BHCOAT(XX,YY,RRFRL1,RRFRL2,NMAX,QQEXT,QQSCA,QBACK)
 C Arguments:
 C NOTE: CHANGED INPUT ARGUMENTS TO PLEASE R Fortran INTERFACE (BAPTISTE AUGUIE 06/03/2010)
       REAL*8 XX,YY,QQEXT,QQSCA,QBACK
       COMPLEX*16 RRFRL1,RRFRL2
+      INTEGER NMAX
 C Local variables:
       INTEGER IFLAG,N,NSTOP
       DOUBLE PRECISION
-     &   CHI0Y,CHI1Y,CHIY,DEL,PSI0Y,PSI1Y,PSIY,QEXT,RN,QSCA,X,Y,YSTOP
+     &   CHI0Y,CHI1Y,CHIY,DEL,PSI0Y,PSI1Y,PSIY,QEXT,RN,QSCA,X,Y
       DOUBLE COMPLEX
      &   AMESS1,AMESS2,AMESS3,AMESS4,AN,ANCAP,
      &   BN,BNCAP,BRACK,
@@ -50,9 +51,9 @@ c         -----------------------------------------------------------
       x1 = rfrel1*x
       x2 = rfrel2*x
       y2 = rfrel2*y
-      ystop = y + 4.*y**0.3333 + 2.0
+c      ystop = y + 4.*y**0.3333 + 2.0
       refrel = rfrel2/rfrel1
-      nstop = ystop
+      nstop = NMAX
 c         -----------------------------------------------------------
 c              series terminated after nstop terms
 c         -----------------------------------------------------------
