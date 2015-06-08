@@ -7,3 +7,5 @@ src/mie.so
 
 *.so
 .Rproj.user
+
+.Rhistory
