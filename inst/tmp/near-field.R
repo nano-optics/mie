@@ -4,9 +4,6 @@ nmax <- 5
 pitau <- pitaun(nmax, theta)
 
 
-
-
-
 lambda = 400:402'
 nMedium = 1.45
 r0 = 50
@@ -23,9 +20,8 @@ region <- "outside"
 # get regular field from known plane wave expression of incident field
 E.reg <- incident_field(wavelength,nMedium,r0,theta)
 
-# calculate irregular VSH expansion (coeffs c,d)
-E.irr <- PweEgenThetaAllPhi(lambda,epsilon,stAbcdn1.cn1,stAbcdn1.dn1,r0,theta,'h1',stPinTaun);
-
+# calculate irregular VSH expansion (using coeffs c,d)
+E.irr <- vsh_pw(wavelength, epsilon, cn1, dn1, r0, theta, type="h", pitau)
 
 Ecr2theta=abs(stE.Ecr).^2;
 Ect2theta=abs(stE.Ect).^2;
@@ -48,6 +44,8 @@ sintcolnorm=(dtheta/2)*transpose(sin(theta)); % [T x 1]
 stE.MLocPerpAve=1/2* Ecr2theta * sintcolnorm;
 stE.MLocParaAve=1/2* (Ect2theta +Esf2theta) * sintcolnorm;
 stE.MLocAve=stE.MLocPerpAve+stE.MLocParaAve;
+
+
 
 % average SERS EF (E4 approximation)
 stE.F0E4Ave= ...
