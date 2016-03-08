@@ -1,13 +1,12 @@
-      SUBROUTINE BHCOAT(XX,YY,RRFRL1,RRFRL2,NMAX,QQEXT,QQSCA,QBACK)
+      SUBROUTINE BHCOAT(XX,YY,RRFRL1,RRFRL2,QQEXT,QQSCA,QBACK)
 C Arguments:
 C NOTE: CHANGED INPUT ARGUMENTS TO PLEASE R Fortran INTERFACE (BAPTISTE AUGUIE 06/03/2010)
       REAL*8 XX,YY,QQEXT,QQSCA,QBACK
       COMPLEX*16 RRFRL1,RRFRL2
-      INTEGER NMAX
 C Local variables:
       INTEGER IFLAG,N,NSTOP
       DOUBLE PRECISION
-     &   CHI0Y,CHI1Y,CHIY,DEL,PSI0Y,PSI1Y,PSIY,QEXT,RN,QSCA,X,Y
+     &   CHI0Y,CHI1Y,CHIY,DEL,PSI0Y,PSI1Y,PSIY,QEXT,RN,QSCA,X,Y,YSTOP
       DOUBLE COMPLEX
      &   AMESS1,AMESS2,AMESS3,AMESS4,AN,ANCAP,
      &   BN,BNCAP,BRACK,
@@ -24,7 +23,7 @@ C Input:
 C        X = 2*PI*RCORE*REFMED/WAVEL
 C        Y = 2*PI*RMANT*REFMED/WAVEL
 C        RFREL1 = REFCOR/REFMED
-C        RFREL2 = REFMAN/REFMED 
+C        RFREL2 = REFMAN/REFMED
 C where  REFCOR = complex refr.index of core)
 C        REFMAN = complex refr.index of mantle)
 C        REFMED = real refr.index of medium)
@@ -51,9 +50,9 @@ c         -----------------------------------------------------------
       x1 = rfrel1*x
       x2 = rfrel2*x
       y2 = rfrel2*y
-c      ystop = y + 4.*y**0.3333 + 2.0
+      ystop = y + 4.*y**0.3333 + 2.0
       refrel = rfrel2/rfrel1
-      nstop = NMAX
+      nstop = ystop
 c         -----------------------------------------------------------
 c              series terminated after nstop terms
 c         -----------------------------------------------------------

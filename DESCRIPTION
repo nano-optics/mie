@@ -23,3 +23,4 @@ Suggests:
     reshape2,
     knitr
 LazyLoad: yes
+RoxygenNote: 5.0.1.9000
