@@ -1,0 +1,21 @@
+templates:
+  params:
+    bootswatch: lumen
+
+reference:
+  - title: alpha
+    desc:  Polarisability
+    contents:
+    - starts_with("alpha_")
+    - init_site
+  - title: cluster
+    desc:  Cluster
+    contents:
+    - starts_with("cluster_")
+    - init_site
+  - title: spectrum
+    desc:  Spectrum
+    contents:
+    - starts_with("spectrum_")
+    - init_site
+    
