@@ -15,7 +15,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-vignette">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -49,15 +49,36 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9">
     
 
-<p>Implementation of Mie scattering theory for light scattering by spherical particles</p>
-<p><a href="http://dx.doi.org/10.5281/zenodo.11421"><img src="https://zenodo.org/badge/5734/baptiste/mie.png" alt="DOI"></a></p>
+    
+    
+<div class="contents">
 
+<p><a href="http://cran.rstudio.com/web/packages/RcppFaddeeva/index.html"><img src="http://www.r-pkg.org/badges/version/RcppFaddeeva"></a> <a href="http://cran.rstudio.com/web/packages/RcppFaddeeva/index.html"><img src="http://cranlogs.r-pkg.org/badges/grand-total/RcppFaddeeva"></a></p>
+<p>Wrapper to the <a href="http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package">Faddeeva Package by Steven G. Johnson</a></p>
+<div id="what-is-faddeeva" class="section level2">
+<h2 class="hasAnchor">
+<a href="#what-is-faddeeva" class="anchor"> </a>What is Faddeeva?</h2>
+<p>The <a href="http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package">Faddeeva</a> package provides C++ code to compute the various error functions of arbitrary complex arguments, in particular the Faddeeva function, error function, complementary error function, scaled complementary error function and imaginary error function as well as the Dawson function. With these, Voigt functions, Fresnel integrals and more can be computed.</p>
+<p><img src="overview.png" width="100" style="display: block; margin: auto;"></p>
+<div id="why-this-package" class="section level3">
+<h3 class="hasAnchor">
+<a href="#why-this-package" class="anchor"> </a>Why this package?</h3>
+<p>The package was created to provide a fast implementation of the Voigt lineshape, formally defined as the convolution between a Lorentzian and a Gaussian. The imaginary part of the Faddeeva function, properly scaled, provides directly the result.</p>
+<p>This package also results in a nice example for creating Rcpp wrappers for a small and self-contained C++ library, in this case a single header file along with a single code file.</p>
+</div>
+<div id="license" class="section level3">
+<h3 class="hasAnchor">
+<a href="#license" class="anchor"> </a>License</h3>
+<p><a href="http://www.gnu.org/licenses/gpl-2.0.html"><img src="http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat" alt="License"></a></p>
+</div>
+</div>
+</div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Browse source code at <br><a href="https://github.com/plasmonics/mie">https://​github.com/​plasmonics/​mie</a>
@@ -72,11 +93,11 @@
 <html><body>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="http://cran.rstudio.com/web/packages/mie/index.html"><img src="http://www.r-pkg.org/badges/version/mie"></a></li>
-<li><a href="http://cran.rstudio.com/web/packages/mie/index.html"><img src="http://cranlogs.r-pkg.org/badges/grand-total/mie"></a></li>
+<li><a href="https://travis-ci.org/baptiste/rcppfaddeeva"><img src="https://travis-ci.org/baptiste/rcppfaddeeva.svg" alt="Build Status"></a></li>
 </ul>
 </body></html>
 </div>
+
 </div>
 
 
