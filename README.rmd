@@ -17,7 +17,7 @@ knitr::include_graphics("overview.png")
 
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-[![DOI](https://zenodo.org/badge/5734/baptiste/mie.png)](http://dx.doi.org/10.5281/zenodo.11421)
+[![DOI](https://zenodo.org/badge/3128881.svg)](https://zenodo.org/badge/latestdoi/3128881)
 
 
 
