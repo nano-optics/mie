@@ -1,3 +1,5 @@
+## ----setup, echo=FALSE,results='hide'------------------------------------
+
 library(mie)
 require(reshape2)
 require(plyr)
@@ -11,6 +13,9 @@ exact <- function(..., material){
   mie(...,  wavelength=material$wavelength, epsilon=material$epsilon, efficiency=TRUE)
 
 }
+
+## ----comparison, echo=TRUE------------------------------------
+
 
 approximate <- function(radius, material="gold", medium=1.33, order=Inf, ...){
 

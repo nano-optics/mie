@@ -1,6 +1,9 @@
+## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
 require(reshape2)
 require(ggplot2)
+
+## ----comparison, echo=TRUE------------------------------------
 
 gold <- epsAu(seq(300, 1000))
 
