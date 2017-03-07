@@ -7,7 +7,7 @@ output:
 [![](http://www.r-pkg.org/badges/version/mie)](http://cran.rstudio.com/web/packages/mie/index.html)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mie)](http://cran.rstudio.com/web/packages/mie/index.html)
 
-Implementation of Mie scattering theory for light scattering by spherical particles
+Implementation of Mie scattering theory for light scattering by spherical particles.
 
 ```{r, echo=FALSE, out.width=100, fig.align='center'}
 knitr::include_graphics("overview.png")
