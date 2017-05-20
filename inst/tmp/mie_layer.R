@@ -101,6 +101,7 @@ susceptibilities <- function(ls, lx, n_max){
     
     if(kk==1){
       
+      # first layer, coeffs at 0
       Gamkm1 = init
       Delkm1 = init
       
@@ -141,6 +142,12 @@ susceptibilities <- function(ls, lx, n_max){
   GD
 }
 
+incident_PWE <- function(n_max){
+  
+  nn <- seq_len(n_max)
+  bn1 <-  1i^(nn+1) * sqrt(pi*(2*nn+1))
+  list(bn1 = bn1, an1 =bn1)
+}
 
 mie_ml <- function(wavelength, epsilon, radii, 
                 nmax = 10,
@@ -159,6 +166,47 @@ mie_ml <- function(wavelength, epsilon, radii,
 
   GD <- susceptibilities(ls, lx, nmax)
   
+  Einc <- incident_PWE(n_max)
+  
+  # % calculate incident PW coefficient an1 and bn1 [1 x nNmax]
+  # stIncEabn1=PweIncEabn1(nNmax);
+  # an1mat=repmat(stIncEabn1.an1,length(lambda),1); % [L x nNmax]
+  # bn1mat=repmat(stIncEabn1.bn1,length(lambda),1); % [L x nNmax]
+  
+  # % calculate Mie coefficients using a downward recurrence (pp. 623,624)
+  # % each cell of coeff corresponds to a given kk=0..nK
+  
+  
+  # allocate results
+  init <- rep(0+0i, n_w)
+  abcd <- replicate(n_lay + 1, 
+                    list(gamma = init, delta = init, alpha = init, beta = init), 
+                  simplify=FALSE)
+  
+  # Initialize recurrence 
+  abcd[[n_lay+1]][["alpha"]] <- Einc[["an1"]]
+  abcd[[n_lay+1]][["beta"]] <- Einc[["bn1"]]
+  
+  for (kk in seq(from=n_lay, to=1, by=-1)){
+    
+    abcd[[kk+1]][["gamma"]] <- GD[[kk]][["Gamma"]] * abcd[[kk+1]][["alpha"]]
+    abcd[[kk+1]][["delta"]] <- GD[[kk]][["Delta"]] * abcd[[kk+1]][["beta"]]
+    
+    abcd[[kk]][["alpha"]] <- GD[[kk]][["A"]] * abcd[[kk+1]][["alpha"]]
+    abcd[[kk]][["beta"]] <- GD[[kk]][["B"]] * abcd[[kk+1]][["beta"]]
+    
+  }
+  
+  # % get theta-dep functions to avoid repeated computations
+  # theta=linspace(0,pi,nNbTheta); % row [1 x T]
+  # stPinTaun=PwePinTaun(stM.nNmax,transpose(theta)); % fields are [T x nNmax]
+  # 
+  # % Spherical averages and theta dependence on the largest sphere surface (outside)
+  # stEsurf=PweSurfProperties(stM,stM.a,nNbTheta,stPinTaun);
+  
+  
+  
+  
   # use last one for efficiencies
   Q <- efficiencies(lx[[n_lay]], GD[[n_lay]], mode=mode, order=order)
   if(!efficiency) Q <- Q * (pi*radii[[n_lay]]^2)
@@ -170,13 +218,14 @@ mie_ml <- function(wavelength, epsilon, radii,
 library(dielectric)
 gold <- epsAg(seq(300, 800))
 a <- 30
-b <- 35
+b <- 34
+c <- 35
 
 bare <- mie(gold$wavelength, gold$epsilon, radius=a, medium=1.33, efficiency=FALSE)
 
-leps <- list(gold$epsilon, 1.5^2, 1.33^2)
-leps <- list(1.5^2, gold$epsilon,  1.33^2)
-la <- list(a,b)
+leps <- list(gold$epsilon, 1.33^2, 1.5^2, 1.33^2)
+# leps <- list(1.5^2, gold$epsilon,  1.33^2)
+la <- list(a,b,c)
 coated <- mie_ml(gold$wavelength, leps, radii=la, efficiency=FALSE)
 
 matplot(bare$wavelength, bare[, -1], type="l", lty=1,
