@@ -223,7 +223,7 @@ c <- 35
 
 bare <- mie(gold$wavelength, gold$epsilon, radius=a, medium=1.33, efficiency=FALSE)
 
-leps <- list(gold$epsilon, 1.33^2, 2^2, 1.33^2)
+leps <- list(gold$epsilon, 1.33^2, 1.5^2+1i, 1.33^2)
 # leps <- list(1.5^2, gold$epsilon,  1.33^2)
 la <- list(a,b,c)
 coated <- mie_ml(gold$wavelength, leps, radii=la, efficiency=FALSE)
