@@ -5,7 +5,7 @@ Version: 1.0
 Date: 2014-06-22
 Authors@R: c(person("Baptiste", "Auguie",
     email = "baptiste.auguie@gmail.com",
-    role = c("aut", "cre")))
+    role = c("aut", "cre"), comment = c(ORCID="0000-0002-2749-5715")))
 License: GPL-3
 Description: Numerical implementation of Mie scattering theory for light
     scattering by spherical particles.
