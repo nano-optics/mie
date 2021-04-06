@@ -150,7 +150,7 @@ incident_PWE <- function(n_max){
 }
 
 mie_ml <- function(wavelength, epsilon, radii, 
-                   n_max = 10,
+                   n_max = 50,
                    efficiency = FALSE, mode=c("EM", "Magnetic", "Electric"),
                    order = Inf){
   
@@ -217,21 +217,30 @@ mie_ml <- function(wavelength, epsilon, radii,
 }
 
 library(dielectric)
-gold <- epsAg(seq(300, 800))
-a <- 30
-b <- 34
-c <- 35
+gold <- epsAu(seq(300, 800))
+N <- 4
+a <- 50
+n1 <- 1.7
+n2 <- 1.5
+l0 <- 500
+t1 <- l0/4/n1
+t2 <- l0/4/n2
+# t1 <- 1
+# t2 <- 1
+ld <- cumsum(c(a,rep(c(t1, t2),N)))
 
 bare <- mie(gold$wavelength, gold$epsilon, radius=a, medium=1.33, efficiency=FALSE)
 
-leps <- list(gold$epsilon, 1.33^2, 1.5^2, 1.33^2)
-# leps <- list(1.5^2, gold$epsilon,  1.33^2)
-la <- list(a,b,c)
-coated <- mie_ml(gold$wavelength, leps, radii=la, efficiency=FALSE)
+leps <- c(list(gold$epsilon), (rep(c(n1^2, n2^2),N)), 1.33^2)
+leps2 <- c(n1^2, (rep(c(n1^2, n2^2),N)), 1.33^2)
 
-matplot(bare$wavelength, bare[, -1], type="l", lty=1,
+coated <- mie_ml(gold$wavelength, leps, radii=ld, efficiency=FALSE)
+onion <- mie_ml(gold$wavelength, leps2, radii=ld, efficiency=FALSE)
+
+matplot(coated$wavelength, coated[, -1], type="l", lty=1,
         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
-matlines(coated$wavelength, coated[, -1],  type="l",  lty=2)
+matlines(onion$wavelength, onion[, -1],  type="l",  lty=2)
+matlines(bare$wavelength, bare[, -1],  type="l",  lty=3)
 
-legend("topright", c(names(bare)[-1], "coated"), col=1:3, lty=c(1,1,1,2))
+legend("topright", c(names(bare)[-1], "onion", "bare"), col=1:3, lty=c(1,1,1,2,3))
 
