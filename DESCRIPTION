@@ -21,6 +21,7 @@ Suggests:
     testthat,
     plyr,
     reshape2,
-    knitr
+    knitr,
+    rmarkdown
 LazyLoad: yes
 RoxygenNote: 5.0.1.9000
