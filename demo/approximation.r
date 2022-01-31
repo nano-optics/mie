@@ -13,14 +13,13 @@ exact <- function(..., material){
   mie(...,  wavelength=material$wavelength, epsilon=material$epsilon, efficiency=TRUE)
 }
 
-approx <- function(..., material){
+approximate <- function(..., material){
   material <- get(material)
   mie_approximation(...,  wavelength=material$wavelength, epsilon=material$epsilon, efficiency=TRUE)
 }
 
 
 ## ----comparison, echo=TRUE------------------------------------
-
 
 params <- expand.grid(order = c(1, 2, Inf), radius = c(60), 
                       material = c("gold", "silver"), 
@@ -45,7 +44,8 @@ ggplot(m, aes(wavelength, value, colour=order, group=interaction(order, L1)))+
   facet_grid(variable~material, scales="free") +
   geom_line(aes(linetype=L1)) +
   ## geom_line(aes(colour=variable), data=m2) +
-  labs(x="wavelength /nm", y=expression(sigma/(pi*a^2)), colour="") +
+  labs(x="wavelength /nm", y=expression(sigma/(pi*a^2)), colour="", 
+       subtitle="Benchmark of approximation formulas\n for a 60nm metal sphere in water") +
   labs(colour="order", linetype="method")+
   scale_fill_brewer(palette="Pastel2")+
   scale_colour_brewer(palette="Set1") +

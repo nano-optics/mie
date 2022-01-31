@@ -29,4 +29,3 @@ Enhancement factor averaged over the surface
 \author{
 Baptiste Auguie
 }
-

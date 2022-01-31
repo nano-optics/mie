@@ -4,9 +4,16 @@
 \alias{mie_bh}
 \title{mie_bh}
 \usage{
-mie_bh(wavelength, epsilon.core, epsilon.coating = medium^2, radius,
-  thickness = 0, medium = 1, lmax = ceiling(2 + max(y) + 4 *
-  max(y)^(1/3)), efficiency = TRUE)
+mie_bh(
+  wavelength,
+  epsilon.core,
+  epsilon.coating = medium^2,
+  radius,
+  thickness = 0,
+  medium = 1,
+  lmax = ceiling(2 + max(y) + 4 * max(y)^(1/3)),
+  efficiency = TRUE
+)
 }
 \arguments{
 \item{wavelength}{real vector}
@@ -45,10 +52,14 @@ matplot(coated$wavelength, coated[, -1], type="l", lty=1,
 matlines(bare$wavelength, bare[, -1], type="l", lty=2)
 legend("topright", c(names(coated)[-1], "bare"), col=1:3, lty=c(1,1,1,2))
 }
+\seealso{
+Other user: 
+\code{\link{mie-package}},
+\code{\link{mie_approximation}()},
+\code{\link{mie_ml}()},
+\code{\link{mie}()}
+}
 \author{
 Baptiste Auguie
 }
-\seealso{
-Other user: \code{\link{mie-package}}, \code{\link{mie}}
-}
-
+\concept{user}

@@ -15,6 +15,10 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+```{r quiet, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
 ```{r demo, message=FALSE, echo=FALSE}
 knitr::read_demo("comparison", package="mie")
 ```

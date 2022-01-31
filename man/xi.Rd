@@ -23,4 +23,3 @@ Obtained from BesselH (Hankel function), converted to spherical Hankel, and scal
 \author{
 Baptiste Auguie
 }
-

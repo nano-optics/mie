@@ -25,4 +25,3 @@ Corresponds to the usual coefficients a_n, b_n, c_n, d_n
 \author{
 Baptiste Auguie
 }
-

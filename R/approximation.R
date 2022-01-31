@@ -15,8 +15,6 @@
 ##' @author Baptiste Auguie
 ##' @family user
 ##' @export
-##' @examples
-##' mie_approximation(50)
 mie_approximation <- function(radius, wavelength, epsilon, medium=1.33, order=Inf, efficiency = FALSE, ...){
   
   s <- sqrt(epsilon) / medium

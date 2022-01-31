@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "mie"
+abstract: Mie scattering
+authors:
+- family-names: "Auguié"
+  given-names: "Baptiste"
+  orcid: "https://orcid.org/0000-0002-2749-5715"
+version: 0.1.0
+date-released: 2021-12-30
+url: "http://nano-optics.ac.nz/mie"
+license: MPL-2.0
+repository-code: "https://github.com/nano-optics/mie/"

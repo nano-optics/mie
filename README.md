@@ -1,9 +1,11 @@
 
-[![](http://www.r-pkg.org/badges/version/mie)](http://cran.rstudio.com/web/packages/mie/index.html) [![](http://cranlogs.r-pkg.org/badges/grand-total/mie)](http://cran.rstudio.com/web/packages/mie/index.html)
+[![](http://www.r-pkg.org/badges/version/mie)](http://cran.rstudio.com/web/packages/mie/index.html)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mie)](http://cran.rstudio.com/web/packages/mie/index.html)
 
-Implementation of Mie scattering theory for light scattering by spherical particles
+Implementation of Mie scattering theory for light scattering by
+spherical particles.
 
-<img src="overview.png" width="100" style="display: block; margin: auto;" />
+<img src="./man/figures/mie.png" width="100" style="display: block; margin: auto;" />
 
 ### License
 

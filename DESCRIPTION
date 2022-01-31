@@ -4,12 +4,12 @@ Title: Mie scattering
 Version: 1.0
 Date: 2014-06-22
 Authors@R: c(person("Baptiste", "Auguie",
-    email = "baptiste.auguie@gmail.com",
+    email = "baptiste.auguie@vuw.ac.nz",
     role = c("aut", "cre"), comment = c(ORCID="0000-0002-2749-5715")))
-License: GPL-3
+License: Mozilla Public License Version 2.0
 Description: Numerical implementation of Mie scattering theory for light
     scattering by spherical particles.
-URL: https://github.com/plasmonics/mie
+URL: https://github.com/nano-optics/mie
 DOI: http://dx.doi.org/10.5281/zenodo.11421
 VignetteBuilder: knitr
 Depends:
@@ -24,4 +24,4 @@ Suggests:
     knitr,
     rmarkdown
 LazyLoad: yes
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 7.1.2

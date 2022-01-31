@@ -4,9 +4,16 @@
 \alias{mie}
 \title{mie}
 \usage{
-mie(wavelength, epsilon, radius, medium = 1, nmax = ceiling(2 + max(x) + 4 *
-  max(x)^(1/3)), efficiency = FALSE, mode = c("EM", "Magnetic", "Electric"),
-  order = Inf)
+mie(
+  wavelength,
+  epsilon,
+  radius,
+  medium = 1,
+  nmax = ceiling(2 + max(x) + 4 * max(x)^(1/3)),
+  efficiency = FALSE,
+  mode = c("EM", "Magnetic", "Electric"),
+  order = Inf
+)
 }
 \arguments{
 \item{wavelength}{real vector}
@@ -62,10 +69,14 @@ ggplot(m) +
       linetype = "Order")
 
 }
+\seealso{
+Other user: 
+\code{\link{mie-package}},
+\code{\link{mie_approximation}()},
+\code{\link{mie_bh}()},
+\code{\link{mie_ml}()}
+}
 \author{
 Baptiste Auguie
 }
-\seealso{
-Other user: \code{\link{mie-package}}, \code{\link{mie_bh}}
-}
-
+\concept{user}

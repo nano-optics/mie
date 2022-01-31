@@ -10,7 +10,7 @@ output:
 Implementation of Mie scattering theory for light scattering by spherical particles.
 
 ```{r, echo=FALSE, out.width=100, fig.align='center'}
-knitr::include_graphics("overview.png")
+knitr::include_graphics("./man/figures/mie.png")
 ```
 
 ### License

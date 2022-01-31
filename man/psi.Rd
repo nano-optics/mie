@@ -23,4 +23,3 @@ Obtained from BesselJ, converted to spherical Bessel, and scaled
 \author{
 Baptiste Auguie
 }
-

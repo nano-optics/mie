@@ -27,4 +27,3 @@ Calculates the far-field efficiencies for plane-wave illumination
 \author{
 Baptiste Auguie
 }
-

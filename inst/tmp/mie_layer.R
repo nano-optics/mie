@@ -217,6 +217,7 @@ mie_ml <- function(wavelength, epsilon, radii,
 }
 
 library(dielectric)
+library(mie)
 gold <- epsAg(seq(300, 800))
 a <- 30
 b <- 34

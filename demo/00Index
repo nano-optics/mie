@@ -1,2 +1,3 @@
 approximation     compare the exact results with a long-wavelength approximation
 comparison    consistency check between BH solution and SPLAC code
+medium    dielectric particle in a medium - loop over refractive index
