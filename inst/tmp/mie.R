@@ -1,32 +1,32 @@
 library(Bessel)
 
-ricatti_bessel <- function(rho, nmax){
+ricatti_bessel <- function(rho, n_max){
   
   rho <- as.complex(rho)
   sq <- sqrt((pi/2)*rho)
-  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = nmax+1)
-  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = nmax+1, m = 1)
+  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = n_max+1)
+  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = n_max+1, m = 1)
   
   psi <- bj[, -1L]
   xi <- bh[, -1L]
-  norho <- outer(1/rho, seq_len(nmax))
+  norho <- outer(1/rho, seq_len(n_max))
   
-  dpsi <- bj[, -(nmax+1)] - norho * psi
-  dxi <- bh[, -(nmax+1)] - norho * xi
+  dpsi <- bj[, -(n_max+1)] - norho * psi
+  dxi <- bh[, -(n_max+1)] - norho * xi
   
   list(psi=psi, xi=xi, dpsi=dpsi, dxi=dxi)
 }
 
 rho <- 2*pi/seq(500, 800, by=100) * 50 * sqrt(-10+1i)
-nmax <- 10
-ricatti_bessel(rho, nmax)
+n_max <- 10
+ricatti_bessel(rho, n_max)
 
-susceptibility <- function(s, x, nmax){
+susceptibility <- function(s, x, n_max){
   
-  smat <- matrix(s, ncol=nmax, nrow=length(x), byrow=FALSE)
+  smat <- matrix(s, ncol=n_max, nrow=length(x), byrow=FALSE)
   z <- s*x
-  rbz <- ricatti_bessel(z, nmax)
-  rbx <- ricatti_bessel(x, nmax)
+  rbz <- ricatti_bessel(z, n_max)
+  rbx <- ricatti_bessel(x, n_max)
   PP1 <- rbz[["psi"]] * rbx[["dpsi"]];
   PP2 <- rbx[["psi"]] * rbz[["dpsi"]];
   PP3 <- rbz[["psi"]] * rbx[["dxi"]];
@@ -65,8 +65,8 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
   
   mode <- match.arg(mode)
   
-  nmax <- NCOL(GD$G)
-  nvec <- seq.int(nmax)
+  n_max <- NCOL(GD$G)
+  nvec <- seq.int(n_max)
   nvec2 <- 2 * nvec + 1
   if(all(is.numeric(order)) && all(is.finite(order))) {
     nvec2[-order] <- 0
@@ -106,7 +106,7 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##' @param epsilon complex vector
 ##' @param radius scalar
 ##' @param medium scalar, refractive index of surrounding medium
-##' @param nmax truncation order
+##' @param n_max truncation order
 ##' @param efficiency logical, scale by geometrical cross-sections
 ##' @param mode type of mode
 ##' @param order order of multipoles
@@ -121,7 +121,7 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##'         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
 ##' legend("topright", names(cross_sections)[-1], col=1:3, lty=1)
 mie <- function(wavelength, epsilon, radius, medium = 1.0,
-                nmax=ceiling(2 + max(x) + 4 * max(x)^(1/3)),
+                n_max=ceiling(2 + max(x) + 4 * max(x)^(1/3)),
                 efficiency = FALSE, mode=c("EM", "Magnetic", "Electric"),
                 order = Inf){
   
@@ -130,8 +130,8 @@ mie <- function(wavelength, epsilon, radius, medium = 1.0,
   s <- sqrt(epsilon) / medium
   x <- 2 * pi / wavelength * medium * radius
   
-  ## lazy evaluation rules.. default nmax evaluated now
-  coeffs <- susceptibility(s, x, nmax)
+  ## lazy evaluation rules.. default n_max evaluated now
+  coeffs <- susceptibility(s, x, n_max)
   Q <- efficiencies(x, coeffs, mode=mode, order=order)
   if(!efficiency) Q <- Q * (pi*radius^2)
   results <- data.frame(wavelength, Q)
@@ -145,7 +145,7 @@ a <- 30
 cross_sections <- with(gold, mie(wavelength, epsilon, radius=a, medium=1.33, efficiency=TRUE, order=1))
 matplot(cross_sections$wavelength, cross_sections[, -1], type="l", lty=1,
         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
-# M <- with(gold, average_Mloc(wavelength, epsilon, radius=a, medium=1.33, nmax=100))
+# M <- with(gold, average_Mloc(wavelength, epsilon, radius=a, medium=1.33, n_max=100))
 # lines(M$wavelength, M$Mloc/max(M$Mloc)*max(cross_sections[,-1]), lty=2)
 legend("topright", c(names(cross_sections)[-1], "<Mloc>"), col=1:3, lty=c(1,1,1,2))
 

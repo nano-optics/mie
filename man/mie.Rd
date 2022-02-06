@@ -9,7 +9,7 @@ mie(
   epsilon,
   radius,
   medium = 1,
-  nmax = ceiling(2 + max(x) + 4 * max(x)^(1/3)),
+  n_max = ceiling(2 + max(x) + 4 * max(x)^(1/3)),
   efficiency = FALSE,
   mode = c("EM", "Magnetic", "Electric"),
   order = Inf
@@ -24,7 +24,7 @@ mie(
 
 \item{medium}{scalar, refractive index of surrounding medium}
 
-\item{nmax}{truncation order}
+\item{n_max}{truncation order}
 
 \item{efficiency}{logical, scale by geometrical cross-sections}
 
@@ -47,27 +47,6 @@ cross_sections <- with(gold, mie(wavelength, epsilon, radius=50, medium=1.33, ef
 matplot(cross_sections$wavelength, cross_sections[, -1], type="l", lty=1,
         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
 legend("topright", names(cross_sections)[-1], col=1:3, lty=1)
-
-gold <- epsAu(seq(200, 1500))
-library(ggplot2)
-
-params <- expand.grid(order = c(1, 2, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
-
-all <- plyr::mdply(params, mie, wavelength=gold$wavelength, 
-             epsilon=gold$epsilon, radius=80, medium=1.5,
-            .progress="text")
-
-m <- tidyr::pivot_longer(all, meas = c("extinction", "scattering", "absorption"))
-
-ggplot(m) +
- facet_grid(mode~variable, scales="free") +
- geom_path(aes(wavelength, value, colour = factor(order))) +
- scale_linetype_manual(values = c(2, 3, 1)) +
- labs(x = expression(wavelength / nm),
-      y = expression(sigma / nm^2),
-      colour = "Mode",
-      linetype = "Order")
-
 }
 \seealso{
 Other user: 

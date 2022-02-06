@@ -17,19 +17,17 @@ mie_ml(
 \arguments{
 \item{wavelength}{real vector}
 
-\item{epsilon}{list of dielectric functions, from inner to outer}
+\item{epsilon}{list of dielectric functions, from inner to outer medium}
 
 \item{radii}{concentric radii of each interface, from smaller to larger}
+
+\item{n_max}{truncation order}
 
 \item{efficiency}{logical, scale by geometrical cross-sections}
 
 \item{mode}{type of mode}
 
 \item{order}{order of multipoles}
-
-\item{medium}{scalar, refractive index of surrounding medium}
-
-\item{nmax}{truncation order}
 }
 \value{
 data.frame

@@ -12,7 +12,7 @@ mat <- data.frame(wavelength = wavelength, epsilon = 2.1^2 +0i)
 
 model <- function(a=20, medium=1.33){
   
-  d <- mie(wavelength, mat$epsilon, radius=a, medium=medium, efficiency=FALSE, nmax = 4)
+  d <- mie(wavelength, mat$epsilon, radius=a, medium=medium, efficiency=FALSE, n_max = 4)
   
   cross_sections <- data.frame(wavelength=wavelength, scattering = d[, 3], 
                                absorption=d[, 4], extinction=d[, 2])

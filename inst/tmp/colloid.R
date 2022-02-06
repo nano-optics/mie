@@ -1,33 +1,33 @@
 library(Bessel)
 library(mie)
 
-ricatti_bessel <- function(rho, nmax){
+ricatti_bessel <- function(rho, n_max){
   
   rho <- as.complex(rho)
   sq <- sqrt((pi/2)*rho)
-  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = nmax+1)
-  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = nmax+1, m = 1)
+  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = n_max+1)
+  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = n_max+1, m = 1)
   
   psi <- bj[, -1L]
   xi <- bh[, -1L]
-  norho <- outer(1/rho, seq_len(nmax))
+  norho <- outer(1/rho, seq_len(n_max))
   
-  dpsi <- bj[, -(nmax+1)] - norho * psi
-  dxi <- bh[, -(nmax+1)] - norho * xi
+  dpsi <- bj[, -(n_max+1)] - norho * psi
+  dxi <- bh[, -(n_max+1)] - norho * xi
   
   list(psi=psi, xi=xi, dpsi=dpsi, dxi=dxi)
 }
 
 rho <- 2*pi/seq(500, 800, by=100) * 50 * sqrt(-10+1i)
-nmax <- 10
-ricatti_bessel(rho, nmax)
+n_max <- 10
+ricatti_bessel(rho, n_max)
 
-susceptibility <- function(s, x, nmax){
+susceptibility <- function(s, x, n_max){
   
-  smat <- matrix(s, ncol=nmax, nrow=length(x), byrow=FALSE)
+  smat <- matrix(s, ncol=n_max, nrow=length(x), byrow=FALSE)
   z <- s*x
-  rbz <- ricatti_bessel(z, nmax)
-  rbx <- ricatti_bessel(x, nmax)
+  rbz <- ricatti_bessel(z, n_max)
+  rbx <- ricatti_bessel(x, n_max)
   PP1 <- rbz[["psi"]] * rbx[["dpsi"]];
   PP2 <- rbx[["psi"]] * rbz[["dpsi"]];
   PP3 <- rbz[["psi"]] * rbx[["dxi"]];
@@ -48,8 +48,8 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
   
   mode <- match.arg(mode)
   
-  nmax <- NCOL(GD$G)
-  nvec <- seq.int(nmax)
+  n_max <- NCOL(GD$G)
+  nvec <- seq.int(n_max)
   nvec2 <- 2 * nvec + 1
   if(all(is.numeric(order)) && all(is.finite(order))) {
     nvec2[-order] <- 0
@@ -88,8 +88,8 @@ susceptibilities <- function(ls, lx, n_max){
   
   lz <- Map("*", ls, lx)
   
-  lrbz <- lapply(lz, ricatti_bessel, nmax = n_max)
-  lrbx <- lapply(lx, ricatti_bessel, nmax = n_max)
+  lrbz <- lapply(lz, ricatti_bessel, n_max = n_max)
+  lrbx <- lapply(lx, ricatti_bessel, n_max = n_max)
   
   # allocate results
   init <- matrix(0+0i, n_w, n_max)
@@ -149,7 +149,7 @@ incident_PWE <- function(n_max){
 }
 
 mie_ml <- function(wavelength, epsilon, radii, 
-                nmax = 10,
+                n_max = 10,
                 efficiency = FALSE, mode=c("EM", "Magnetic", "Electric"),
                 order = Inf){
   
@@ -164,14 +164,14 @@ mie_ml <- function(wavelength, epsilon, radii,
   # 2pi/lambda * sqrt(eps+) * a
   lx <- Map(function(r, e) 2 * pi / wavelength * sqrt(e) * r, radii, epsilon[-1])
 
-  GD <- susceptibilities(ls, lx, nmax)
+  GD <- susceptibilities(ls, lx, n_max)
   
-  Einc <- incident_PWE(nmax)
+  Einc <- incident_PWE(n_max)
   
-  # % calculate incident PW coefficient an1 and bn1 [1 x nNmax]
-  # stIncEabn1=PweIncEabn1(nNmax);
-  # an1mat=repmat(stIncEabn1.an1,length(lambda),1); % [L x nNmax]
-  # bn1mat=repmat(stIncEabn1.bn1,length(lambda),1); % [L x nNmax]
+  # % calculate incident PW coefficient an1 and bn1 [1 x nn_max]
+  # stIncEabn1=PweIncEabn1(nn_max);
+  # an1mat=repmat(stIncEabn1.an1,length(lambda),1); % [L x nn_max]
+  # bn1mat=repmat(stIncEabn1.bn1,length(lambda),1); % [L x nn_max]
   
   # % calculate Mie coefficients using a downward recurrence (pp. 623,624)
   # % each cell of coeff corresponds to a given kk=0..nK
@@ -199,7 +199,7 @@ mie_ml <- function(wavelength, epsilon, radii,
   
   # % get theta-dep functions to avoid repeated computations
   # theta=linspace(0,pi,nNbTheta); % row [1 x T]
-  # stPinTaun=PwePinTaun(stM.nNmax,transpose(theta)); % fields are [T x nNmax]
+  # stPinTaun=PwePinTaun(stM.nn_max,transpose(theta)); % fields are [T x nn_max]
   # 
   # % Spherical averages and theta dependence on the largest sphere surface (outside)
   # stEsurf=PweSurfProperties(stM,stM.a,nNbTheta,stPinTaun);

@@ -11,7 +11,7 @@ susceptibilities(ls, lx, n_max)
 
 \item{lx}{list of size parameters}
 
-\item{nmax}{integer, maximum order}
+\item{n_max}{integer, maximum order}
 }
 \value{
 list with Gamma, Delta, A, B

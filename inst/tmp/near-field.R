@@ -1,7 +1,7 @@
 theta <- seq(0,pi,length=10)
 ntheta <- length(theta)
-nmax <- 5
-pitau <- pitaun(nmax, theta)
+n_max <- 5
+pitau <- pitaun(n_max, theta)
 
 
 lambda = 400:402'

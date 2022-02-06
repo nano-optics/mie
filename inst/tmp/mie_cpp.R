@@ -15,27 +15,27 @@ sourceCpp(code='
 )
 
 
-ricatti_bessel <- function(rho, nmax){
+ricatti_bessel <- function(rho, n_max){
   
   # rho <- as.complex(rho)
   sq <- sqrt((pi/2)*rho)
   # sq <- 1
-  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = nmax+1)
-  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = nmax+1, m = 1)
+  bj <- sq * BesselJ(z = rho, nu = 0.5, nSeq = n_max+1)
+  bh <- sq * BesselH(z = rho, nu = 0.5, nSeq = n_max+1, m = 1)
   
   psi <- bj[, -1L]
   xi <- bh[, -1L]
-  norho <- outer(1/rho, seq_len(nmax))
+  norho <- outer(1/rho, seq_len(n_max))
   
-  dpsi <- bj[, -(nmax+1)] - norho * psi
-  dxi <- bh[, -(nmax+1)] - norho * xi
+  dpsi <- bj[, -(n_max+1)] - norho * psi
+  dxi <- bh[, -(n_max+1)] - norho * xi
   
   list(psi=psi, xi=xi, dpsi=dpsi, dxi=dxi)
 }
 
 rho <- 2*pi/seq(500, 800, by=10) * 50 * 1.5
-nmax <- 5
-r <- ricatti_bessel(rho, nmax)
+n_max <- 5
+r <- ricatti_bessel(rho, n_max)
 
 cpp <- sapply(rho, bj, nu=0.5)
 matplot(rho, cbind(cpp, r$psi[,1]), t="l",lty=1)

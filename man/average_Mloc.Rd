@@ -4,7 +4,7 @@
 \alias{average_Mloc}
 \title{average_Mloc}
 \usage{
-average_Mloc(wavelength, epsilon, radius, medium = 1, nmax = 10)
+average_Mloc(wavelength, epsilon, radius, medium = 1, n_max = 10)
 }
 \arguments{
 \item{wavelength}{real vector}
@@ -15,7 +15,7 @@ average_Mloc(wavelength, epsilon, radius, medium = 1, nmax = 10)
 
 \item{medium}{scalar, refractive index of surrounding medium}
 
-\item{nmax}{truncation order}
+\item{n_max}{truncation order}
 }
 \value{
 data.frame with wavelength and Mloc

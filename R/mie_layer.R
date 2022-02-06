@@ -3,7 +3,7 @@
 ##'
 ##' Corresponds to the usual coefficients a_n, b_n, c_n, d_n
 ##' @title susceptibilities
-##' @param nmax integer, maximum order
+##' @param n_max integer, maximum order
 ##' @param ls list of relative refractive index
 ##' @param lx list of size parameters
 ##' @return list with Gamma, Delta, A, B
@@ -83,10 +83,9 @@ incident_PWE <- function(n_max){
 ##' Multilayered sphere illuminated by a plane wave
 ##' @title mie_ml
 ##' @param wavelength real vector
-##' @param epsilon list of dielectric functions, from inner to outer
+##' @param epsilon list of dielectric functions, from inner to outer medium
 ##' @param radii concentric radii of each interface, from smaller to larger
-##' @param medium scalar, refractive index of surrounding medium
-##' @param nmax truncation order
+##' @param n_max truncation order
 ##' @param efficiency logical, scale by geometrical cross-sections
 ##' @param mode type of mode
 ##' @param order order of multipoles
@@ -114,7 +113,6 @@ incident_PWE <- function(n_max){
 ##' matlines(coated$wavelength, coated[, -1],  type="l",  lty=2)
 ##' 
 ##' legend("topright", c(names(bare)[-1], "coated"), col=1:3, lty=c(1,1,1,2))
-
 mie_ml <- function(wavelength, epsilon, radii, 
                    n_max = 10,
                    efficiency = FALSE, 

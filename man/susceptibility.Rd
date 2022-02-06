@@ -4,14 +4,14 @@
 \alias{susceptibility}
 \title{susceptibility}
 \usage{
-susceptibility(s, x, nmax)
+susceptibility(s, x, n_max)
 }
 \arguments{
 \item{s}{complex vector, relative refractive index}
 
 \item{x}{real vector, size parameter}
 
-\item{nmax}{integer, maximum order}
+\item{n_max}{integer, maximum order}
 }
 \value{
 list with Gamma, Delta, A, B

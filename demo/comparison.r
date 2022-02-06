@@ -14,7 +14,7 @@ test <- with(gold, mie_bh(wavelength, epsilon, radius = radius,
 
 
 cross_sections <- with(gold, mie(wavelength, epsilon, radius=radius, 
-                                 medium=medium, efficiency=FALSE, nmax = 4))
+                                 medium=medium, efficiency=FALSE, n_max = 4))
 cross_sections2 <- data.frame(wavelength=gold[, 1], scattering = test[, 3], 
                               absorption=test[, 4])
 

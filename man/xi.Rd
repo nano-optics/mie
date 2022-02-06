@@ -4,12 +4,12 @@
 \alias{xi}
 \title{xi}
 \usage{
-xi(rho, nmax)
+xi(rho, n_max)
 }
 \arguments{
 \item{rho}{complex vector, argument}
 
-\item{nmax}{integer, maximum order}
+\item{n_max}{integer, maximum order}
 }
 \value{
 a list with psi_n and psi'_n
