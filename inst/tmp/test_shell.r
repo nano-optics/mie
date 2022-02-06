@@ -1,6 +1,6 @@
 ## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
-require(reshape2)
+require(tidyr)
 require(ggplot2)
 
 ## ----comparison, echo=TRUE------------------------------------
@@ -15,14 +15,17 @@ test <- mie_bh(wavelength, epsilon.core=gold$epsilon, epsilon.coating = 1.5^2,
 cross_sections <- data.frame(wavelength=gold[, 1], scattering = test[, 3], 
                               absorption=test[, 4], extinction=test[, 2])
 
-m <- melt(cross_sections, id=1, measure=c("scattering", "absorption", "extinction"))
+m <- pivot_longer(cross_sections, cols=c("scattering", "absorption", "extinction"))
 }
 params <- expand.grid(a=seq(5, 40, by=5), d=seq(100, 150, by=5))
-all <- mdply(params, model, .progress='text')
+all <- purrr::pmap_df(params, model, .id = 'id')
+params$id <- as.character(1:nrow(params))
+all <- left_join(params, all)
+str(all)
 p <- 
-ggplot(all, aes(wavelength, value, linetype=variable))+
+ggplot(all, aes(wavelength, value, linetype=name))+
   facet_grid(.~a) +
-  geom_line(aes(colour=d,group=interaction(variable,d))) +
+  geom_line(aes(colour=d,group=interaction(name,d))) +
   labs(x="wavelength /nm", y=expression(sigma/(pi*a^2)), colour="") +
   scale_fill_brewer(palette="Pastel2") +
   scale_color_viridis_c()

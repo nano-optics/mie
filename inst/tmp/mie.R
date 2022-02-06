@@ -120,27 +120,6 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##' matplot(cross_sections$wavelength, cross_sections[, -1], type="l", lty=1,
 ##'         xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
 ##' legend("topright", names(cross_sections)[-1], col=1:3, lty=1)
-##'
-##'gold <- epsAu(seq(200, 1500))
-##'library(ggplot2)
-##'
-##'params <- expand.grid(order = c(1, 2, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
-##'
-##'all <- plyr::mdply(params, mie, wavelength=gold$wavelength, 
-##'              epsilon=gold$epsilon, radius=80, medium=1.5,
-##'             .progress="text")
-##'
-##'m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
-##'
-##'ggplot(m) +
-##'  facet_grid(mode~variable, scales="free") +
-##'  geom_path(aes(wavelength, value, colour = factor(order))) +
-##'  scale_linetype_manual(values = c(2, 3, 1)) +
-##'  labs(x = expression(wavelength / nm),
-##'       y = expression(sigma / nm^2),
-##'       colour = "Mode",
-##'       linetype = "Order")
-##' 
 mie <- function(wavelength, epsilon, radius, medium = 1.0,
                 nmax=ceiling(2 + max(x) + 4 * max(x)^(1/3)),
                 efficiency = FALSE, mode=c("EM", "Magnetic", "Electric"),
@@ -176,14 +155,17 @@ library(ggplot2)
 
 params <- expand.grid(order = c(1, 2, 3, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
 
-all <- plyr::mdply(params, mie, wavelength=gold$wavelength, 
+all <- purrr::pmap_df(params, mie, wavelength=gold$wavelength, 
                    epsilon=gold$epsilon, radius=80, medium=1.5,
-                   .progress="text")
+                   .id = 'id')
 
-m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
+params$id <- as.character(1:nrow(params))
+
+m <- tidyr::pivot_longer(left_join(params, all, by='id'),
+                         cols = c("extinction", "scattering", "absorption"))
 
 ggplot(m) +
-  facet_grid(mode~variable, scales="free") +
+  facet_grid(mode~name, scales="free") +
   geom_path(aes(wavelength, value, colour = factor(order))) +
   scale_linetype_manual(values = c(2, 3, 1)) +
   labs(x = expression(wavelength / nm),

@@ -12,16 +12,19 @@ Description: Numerical implementation of Mie scattering theory for light
 URL: https://github.com/nano-optics/mie
 DOI: http://dx.doi.org/10.5281/zenodo.11421
 VignetteBuilder: knitr
+Encoding: UTF-8
 Depends:
     dielectric
 Imports:
     Bessel
 Suggests:
     ggplot2,
+    purrr,
+    dplyr,
+    tidyr,
     testthat,
-    plyr,
-    reshape2,
     knitr,
     rmarkdown
 LazyLoad: yes
 RoxygenNote: 7.1.2
+

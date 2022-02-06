@@ -1,6 +1,6 @@
 ## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
-require(reshape2)
+require(tidyr)
 require(ggplot2)
 
 ## ----comparison, echo=TRUE------------------------------------
@@ -18,13 +18,13 @@ cross_sections <- with(gold, mie(wavelength, epsilon, radius=radius,
 cross_sections2 <- data.frame(wavelength=gold[, 1], scattering = test[, 3], 
                               absorption=test[, 4])
 
-m <- melt(cross_sections, id=1, measure=c("scattering", "absorption"))
-m2 <- melt(cross_sections2, id=1, measure=c("scattering", "absorption"))
+m <- pivot_longer(cross_sections, cols=c("scattering", "absorption"))
+m2 <- pivot_longer(cross_sections2, cols=c("scattering", "absorption"))
 
 p <- 
-ggplot(m, aes(wavelength, value,  group=variable))+
-  geom_line(aes(colour=variable,linetype='ELR'),alpha=0.5, size=1.0) +
-  geom_line(aes(colour=variable,linetype='BH'), size=1.0,  data=m2) +
+ggplot(m, aes(wavelength, value,  group=name))+
+  geom_line(aes(colour=name,linetype='ELR'),alpha=0.5, size=1.0) +
+  geom_line(aes(colour=name,linetype='BH'), size=1.0,  data=m2) +
   # scale_fill_brewer(palette="Pastel2")+
   scale_colour_brewer(palette="Set2") +
   scale_linetype_manual(values=c(2,1)) +

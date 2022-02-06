@@ -1,9 +1,8 @@
 ## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
-require(reshape2)
+require(tidyr)
 require(ggplot2)
 library(dplyr)
-library(plyr)
 
 ## ----comparison, echo=TRUE------------------------------------
 
@@ -24,27 +23,25 @@ cross_sections <- data.frame(wavelength=gold[, 1], scattering = test[, 3],
 cross_sections$ratio1 <- (cross_sections$extinction / cross_sections$scattering - 2/3) * V * km^3
 
 cross_sections$ratio2 <- (cross_sections$extinction / cross_sections$absorption - 1) / V / km^3
-m <- melt(cross_sections, id=1, 
-          measure=c("scattering", "absorption", "extinction",'ratio1','ratio2'))
+m <- pivot_longer(cross_sections, cols=c("scattering", "absorption", "extinction",'ratio1','ratio2'))
 }
-params <- expand.grid(a=seq(10, 100, by=10))
-
 params <- expand.grid(a=seq(5, 30, by=5))
-
-all <- mdply(params, model, .progress='text')
-
+all <- purrr::pmap_df(params, model, .id = 'id')
+params$id <- as.character(1:nrow(params))
+all <- left_join(params, all)
 
 p <- 
-ggplot(subset(all, variable!='ratio'), aes(wavelength, value, linetype=variable))+
+ggplot(subset(all, name!='ratio'), aes(wavelength, value, linetype=name))+
   facet_wrap(~a,scales='free') +
   geom_line() +
   labs(x="wavelength /nm", y=expression(sigma/(pi*a^2)), colour="") +
   scale_fill_brewer(palette="Pastel2") +
   scale_color_viridis_c()
 
+p
 
 perm <- data.frame(wavelength = gold$wavelength, ratio = -pi^2*Im(1.33^3 / (gold$epsilon - 1.33^2)))
-p1 <- ggplot(subset(all, variable == 'ratio1' & wavelength < 1000), 
+p1 <- ggplot(subset(all, name == 'ratio1' & wavelength < 1000), 
        aes(wavelength, value, colour=factor(a),group=a))+
   geom_line() +
   labs(x="wavelength /nm", y=expression((sigma[scat]/sigma[abs] )%*%lambda^3/R^3), colour="R /nm") +
@@ -56,10 +53,10 @@ p1 <- ggplot(subset(all, variable == 'ratio1' & wavelength < 1000),
   geom_line(data=perm, aes(wavelength,ratio), inherit.aes = FALSE)
 
 p1
-# ggsave(p1, file='ratio.pdf',width=6,height=6)
 
 
-p2 <- ggplot(subset(all, variable == 'ratio2' & wavelength < 1000), 
+
+p2 <- ggplot(subset(all, name == 'ratio2' & wavelength < 1000), 
              aes(wavelength, value, colour=factor(a),group=a))+
   geom_line() +
   labs(x="wavelength /nm", y=expression((sigma[ext]/sigma[abs] - 1)%*%lambda^3/R^3), colour="R /nm") +

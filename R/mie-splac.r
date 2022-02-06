@@ -31,7 +31,7 @@
 ##'              epsilon=gold$epsilon, radius=80, medium=1.5,
 ##'             .progress="text")
 ##'
-##'m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
+##'m <- tidyr::pivot_longer(all, meas = c("extinction", "scattering", "absorption"))
 ##'
 ##'ggplot(m) +
 ##'  facet_grid(mode~variable, scales="free") +

@@ -1,6 +1,6 @@
 ## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
-require(reshape2)
+require(tidyr)
 require(ggplot2)
 
 ## ----comparison, echo=TRUE------------------------------------
@@ -15,24 +15,27 @@ model <- function(a=30, d=0, medium=1.33){
   cross_sections <- data.frame(wavelength=mat[, 1], scattering = test[, 3], 
                                absorption=test[, 4], extinction=test[, 2])
   
-  # m <- melt(cross_sections, id=1, measure=c("scattering", "absorption", "extinction"))
-  m <- melt(cross_sections, id=1, measure=c( "extinction"))
+  # m <- pivot_longer(cross_sections, id=1, measure=c("scattering", "absorption", "extinction"))
+  m <- pivot_longer(cross_sections, cols=c( "extinction"))
 }
 
 params <- expand.grid(a=seq(500, 1500, by=500))
 # params <- expand.grid(a=seq(5000, 8000, by=500))
-all <- mdply(params, model, .progress='text', medium=1.0)
+all <- purrr::pmap_df(params, model, medium=1.0, .id = 'id')
+params$id <- as.character(1:nrow(params))
+all <- left_join(params, all, by='id')
+
 p <- 
-  ggplot(all, aes(wavelength, value, linetype=variable))+
+  ggplot(all, aes(wavelength, value, linetype=name))+
   facet_wrap(~a, scales="free") +
-  geom_line(aes(colour=factor(a),group=interaction(variable))) +
+  geom_line(aes(colour=factor(a),group=interaction(name))) +
   labs(x="wavelength /nm", y=expression(sigma[ext]/nm^2), colour="radius /nm") +
   scale_fill_brewer(palette="Pastel2") +
   scale_color_brewer(palette="Set1")
 
 p
 
-ggsave("glassinair.pdf",width=10,height=3)
+# ggsave("glassinair.pdf",width=10,height=3)
 # s <- susceptibility(2, 1, 3)
 # s$G
 # -0.00814193+0.08986456i -4.023e-06+2.005721e-03i -9.1e-10+3.009717e-05i

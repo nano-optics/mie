@@ -40,6 +40,27 @@ Far-field cross-sections
 \details{
 Multilayered sphere illuminated by a plane wave
 }
+\examples{
+library(dielectric)
+library(mie)
+gold <- epsAg(seq(300, 800))
+a <- 30
+b <- 34
+c <- 35
+
+bare <- mie(gold$wavelength, gold$epsilon, radius=a, medium=1.33, efficiency=FALSE)
+
+leps <- list(gold$epsilon, 1.33^2, 1.5^2, 1.33^2)
+# leps <- list(1.5^2, gold$epsilon,  1.33^2)
+la <- list(a,b,c)
+coated <- mie_ml(gold$wavelength, leps, radii=la, efficiency=FALSE)
+
+matplot(bare$wavelength, bare[, -1], type="l", lty=1,
+        xlab=expression(lambda/mu*m), ylab=expression(sigma/mu*m^2))
+matlines(coated$wavelength, coated[, -1],  type="l",  lty=2)
+
+legend("topright", c(names(bare)[-1], "coated"), col=1:3, lty=c(1,1,1,2))
+}
 \seealso{
 Other user: 
 \code{\link{mie-package}},

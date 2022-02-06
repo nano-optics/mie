@@ -153,7 +153,7 @@ efficiencies <- function(x, GD, mode=c("EM", "Magnetic", "Electric"), order = NU
 ##'              epsilon=gold$epsilon, radius=80, medium=1.5,
 ##'             .progress="text")
 ##'
-##'m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
+##'m <- tidyr::pivot_longer(all, meas = c("extinction", "scattering", "absorption"))
 ##'
 ##'ggplot(m) +
 ##'  facet_grid(mode~variable, scales="free") +
@@ -199,14 +199,16 @@ library(ggplot2)
 
 params <- expand.grid(order = c(1, 2, 3, Inf), mode = c("EM", "Magnetic", "Electric"), stringsAsFactors=FALSE)
 
-all <- plyr::mdply(params, mie, wavelength=gold$wavelength, 
+all <- purrr::pmap_df(params, mie, wavelength=gold$wavelength, 
                    epsilon=gold$epsilon, radius=80, medium=1.5,
-                   .progress="text")
+                   .id='id')
+params$id <- as.character(1:nrow(params))
+all <- left_join(params, all, by='id')
 
-m <- reshape2::melt(all, meas = c("extinction", "scattering", "absorption"))
+m <- tidyr::pivot_longer(all, cols = c("extinction", "scattering", "absorption"))
 
 ggplot(m) +
-  facet_grid(mode~variable, scales="free") +
+  facet_grid(mode~name, scales="free") +
   geom_path(aes(wavelength, value, colour = factor(order))) +
   scale_linetype_manual(values = c(2, 3, 1)) +
   labs(x = expression(wavelength / nm),

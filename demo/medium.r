@@ -1,7 +1,9 @@
 ## ----setup, echo=FALSE,results='hide'------------------------------------
 library(mie)
-require(reshape2)
 require(ggplot2)
+library(dplyr)
+library(purrr)
+library(tidyr)
 
 ## ----comparison, echo=TRUE------------------------------------
 
@@ -15,11 +17,10 @@ model <- function(a=20, medium=1.33){
   cross_sections <- data.frame(wavelength=wavelength, scattering = d[, 3], 
                                absorption=d[, 4], extinction=d[, 2])
   
-  m <- melt(cross_sections, id=1, measure=c("extinction"))
+  m <- tidyr::pivot_longer(cross_sections, cols = "extinction")
 }
 
 params <- expand.grid(medium=seq(1, 2, by=0.1))
-library(dplyr)
 all <- purrr::pmap_df(params, model, .id = 'id')
 params$id <- as.character(1:nrow(params))
 d <- left_join(params, all, by='id')

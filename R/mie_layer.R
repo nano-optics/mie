@@ -94,7 +94,7 @@ incident_PWE <- function(n_max){
 ##' @author Baptiste Auguie
 ##' @family user
 ##' @export
-##' @example 
+##' @examples
 ##' library(dielectric)
 ##' library(mie)
 ##' gold <- epsAg(seq(300, 800))
