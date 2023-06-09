@@ -22,7 +22,9 @@ susceptibilities <- function(ls, lx, n_max){
   
   # allocate results
   init <- matrix(0+0i, n_w, n_max)
-  GD <- replicate(n_lay, list(Gamma = init, Delta = init, A = init, B = init), 
+  GD <- replicate(n_lay, list(Gamma = init, Delta = init, 
+                              A = init, B = init,
+                              vGamma = init, vDelta = init), 
                   simplify=FALSE)
   
   for (kk in seq_len(n_lay)){
@@ -32,11 +34,15 @@ susceptibilities <- function(ls, lx, n_max){
       # first layer, coeffs at 0
       Gamkm1 = init
       Delkm1 = init
+      vGamkm1 = init
+      vDelkm1 = init
       
     } else {
       
       Gamkm1 = GD[[kk-1]][['Gamma']]
       Delkm1 = GD[[kk-1]][['Delta']]
+      vGamkm1 = GD[[kk-1]][['vGamma']]
+      vDelkm1 = GD[[kk-1]][['vDelta']]
       
     }
     
@@ -44,15 +50,35 @@ susceptibilities <- function(ls, lx, n_max){
     smat <- matrix(ls[[kk]], ncol=n_max, nrow=n_w)
     
     # auxiliary functions for Gamma and A
-    
+    #
+    #          s*Psi(x)*Psi'(sx) - Psi(sx)*Psi'(x)
+    #  Gamma = ----------------------------------
+    #          Psi(sx)*Xi'(x) - s*Xi(x)*Psi'(sx)
+    #
+    #                       i*s
+    #  A    = ----------------------------------
+    #          Psi(sx)*Xi'(x) - s*Xi(x)*Psi'(sx)
+    # (same denominator)
+    #
+    #          s*Psi(x)*Psi'(sx) - Psi(sx)*Psi'(x)
+    # vGamma = ----------------------------------
+    #          Psi(sx)*Xi'(x) - s*Xi(x)*Psi'(sx)
+    #
     PP1 <- lrbz[[kk]][["psi"]] + Gamkm1 * lrbz[[kk]][["xi"]]
     PP2 <- lrbz[[kk]][["dpsi"]] + Gamkm1 * lrbz[[kk]][["dxi"]]
+    vPP1 <- lrbz[[kk]][["psi"]] + vGamkm1 * lrbz[[kk]][["xi"]]
+    vPP2 <- lrbz[[kk]][["dpsi"]] + vGamkm1 * lrbz[[kk]][["dxi"]]
     
     Nnk <- lrbx[[kk]][["dpsi"]] * PP1 - smat * lrbx[[kk]][["psi"]] * PP2
     Dnk <- lrbx[[kk]][["xi"]] * PP2 - lrbx[[kk]][["dxi"]] * PP1 
+    vNnk <- lrbx[[kk]][["dpsi"]] * vPP1 - smat * lrbx[[kk]][["psi"]] * vPP2
+    vDnk <- lrbx[[kk]][["xi"]] * vPP2 - lrbx[[kk]][["dxi"]] * vPP1 
     
     GD[[kk]][['Gamma']] <- Nnk / Dnk
     GD[[kk]][['A']] = -1i*smat / Dnk
+    # now the v one
+    
+    GD[[kk]][['vGamma']] <- vNnk / vDnk
     
     # same logic for Delta and B
     
